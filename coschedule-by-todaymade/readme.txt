@@ -3,8 +3,8 @@ Contributors: CoSchedule
 Donate link: http://coschedule.com
 Tags: Content marketing calendar, drag and drop editorial calendar plugin, social media scheduling, editorial calendar plugin, content marketing, social automation tool, pinterest integration, schedule facebook posts, schedule to twitter, social media, tumblr, schedule posts to Linkedin, Google Analytics, social media analytics, Google Docs integration, Evernote integration, Click to Tweet
 Requires at least: 3.5
-Tested up to: 6.4
-Stable tag: 3.3.10
+Tested up to: 6.8
+Stable tag: 3.3.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,18 +60,24 @@ You can install CoSchedule via the WordPress.org plugin directory or manually by
 
 == Frequently Asked Questions ==
 
-##### How does the CoSchedule plug-in work?
+= How does the CoSchedule plug-in work? =
 CoSchedule synchronizes your WordPress posts, author, and category information to its servers, but all of your WordPress data remains in WordPress. CoSchedule will update that WordPress data as you direct, but the data always remains in WordPress. Social messages, tasks, comments, team members, and other data you create in CoSchedule will be stored on CoSchedule’s servers, and never in WordPress.
 
-##### How do I connect my CoSchedule Account and my WordPress?
+= How do I connect my CoSchedule Account and my WordPress? =
 After you sign into your CoSchedule account, you can connect your WordPress blog to your account by following the directions in the Installation tab at the top of the page. If there is an issue with your CoSchedule account please reach out to support at support@coschedule.com.
 
-##### How much do CoSchedule products cost?
+= How much do CoSchedule products cost? =
 Please visit CoSchedule’s website to learn more about pricing for specific products.
+
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the CoSchedule plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/a2aaaa36-c78c-4ba3-9610-a6a97c4ba01a). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Screenshots ==
 
 == Changelog ==
+
+= 3.3.10 =
+* Updated tested up to WordPress core v6.8
 
 = 3.3.9 =
 * Security patches
@@ -364,6 +370,9 @@ Please visit CoSchedule’s website to learn more about pricing for specific pro
 * Private beta release
 
 == Upgrade Notice ==
+
+= 3.3.10 =
+* Updated tested up to WordPress core v6.8
 
 = 3.3.9 =
 * Security patches

@@ -2,7 +2,7 @@
 /*
 Plugin Name: CoSchedule
 Description: Plan, organize, and execute every content marketing project in one place with CoSchedule, an all-in-one content marketing editorial calendar solution.
-Version: 3.3.10
+Version: 3.3.11
 Author: CoSchedule
 Author URI: http://coschedule.com/
 Plugin URI: http://coschedule.com/
@@ -24,7 +24,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
         private $webhooks_url = "https://webhooks.coschedule.com";
         private $app = "https://app.coschedule.com";
         private $assets = "https://assets.coschedule.com";
-        private $version = "3.3.10";
+        private $version = "3.3.11";
         private $build;
         private $connected = false;
         private $token = false;
@@ -48,7 +48,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
             register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
 
             // Load variables
-            $this->build                  = intval( "100" );
+            $this->build                  = intval( "101" );
             $this->token                  = get_option( 'tm_coschedule_token' );
             $this->calendar_id            = get_option( 'tm_coschedule_calendar_id' );
             $this->wordpress_site_id      = get_option( 'tm_coschedule_wordpress_site_id' );
