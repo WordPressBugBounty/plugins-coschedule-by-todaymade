@@ -3,10 +3,7 @@
 if ( current_user_can( 'manage_options' ) !== true ) {
     include( plugin_dir_path( __FILE__ ) . '_access-denied.php' );
     die;
-  }
-
-$ajax_nonce = wp_create_nonce( 'coschedule-plugin-setup' );
-
+}
 ?>
 <style>
   @media only screen and (max-width: 960px) {
@@ -109,7 +106,7 @@ $ajax_nonce = wp_create_nonce( 'coschedule-plugin-setup' );
             token: wordpressSiteKey,
             calendar_id: calendarId,
             wordpress_site_id: wordpressSiteId,
-            security: '<?php echo $ajax_nonce; ?>',
+            security: '<?php echo wp_create_nonce( 'coschedule-plugin-setup' ); ?>',
           })
           .done(resolve)
           .fail(reject);
@@ -122,6 +119,7 @@ $ajax_nonce = wp_create_nonce( 'coschedule-plugin-setup' );
             url: ajaxurl,
             data: {
               action: 'tm_aj_get_bloginfo',
+              security: '<?php echo wp_create_nonce( 'tm_aj_get_bloginfo' ); ?>',
             },
             dataType: 'json',
           })

@@ -2,7 +2,7 @@
 /*
 Plugin Name: CoSchedule
 Description: Plan, organize, and execute every content marketing project in one place with CoSchedule, an all-in-one content marketing editorial calendar solution.
-Version: 3.3.11
+Version: 3.4.1
 Author: CoSchedule
 Author URI: http://coschedule.com/
 Plugin URI: http://coschedule.com/
@@ -24,7 +24,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
         private $webhooks_url = "https://webhooks.coschedule.com";
         private $app = "https://app.coschedule.com";
         private $assets = "https://assets.coschedule.com";
-        private $version = "3.3.11";
+        private $version = "3.4.1";
         private $build;
         private $connected = false;
         private $token = false;
@@ -48,7 +48,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
             register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
 
             // Load variables
-            $this->build                  = intval( "101" );
+            $this->build                  = intval( "103" );
             $this->token                  = get_option( 'tm_coschedule_token' );
             $this->calendar_id            = get_option( 'tm_coschedule_calendar_id' );
             $this->wordpress_site_id      = get_option( 'tm_coschedule_wordpress_site_id' );
@@ -720,6 +720,44 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
          */
         public function tm_aj_get_bloginfo( $data_args ) {
             try {
+                $security_valid   = false;
+                $auth_token_valid = false;
+
+                $security = isset( $_GET['security'] )
+                    ? sanitize_text_field( $_GET['security'] )
+                    : ( isset( $data_args['security'] ) ? $data_args['security'] : null );
+                if ( $security !== null ) {
+                    $this->sanitize_param( $security );
+                    $security_valid = (bool) wp_verify_nonce( $security, 'tm_aj_get_bloginfo' );
+                }
+
+                $auth_token = isset( $_GET['auth_token'] )
+                    ? sanitize_text_field( $_GET['auth_token'] )
+                    : ( isset( $data_args['auth_token'] ) ? $data_args['auth_token'] : null );
+                if ( $auth_token !== null ) {
+                    $this->sanitize_param( $auth_token );
+
+                    $resp             = $this->do_request(
+                        $this->api . '/wordpress/validateToken',
+                        array(
+                            'method' => 'POST',
+                            'body'   => array(
+                                'site_url' => get_site_url(),
+                                'token'    => $auth_token,
+                                'type'     => 'tm_aj_get_bloginfo',
+                            ),
+                        )
+                    );
+                    $auth_token_valid =
+                        is_array( $resp )
+                        && isset( $resp['response']['code'] )
+                        && 200 === intval( $resp['response']['code'] );
+                }
+
+                if ( ! $security_valid && ! $auth_token_valid ) {
+                    throw new Exception( 'Access Denied.' );
+                }
+
                 $http_api_transports = apply_filters( 'http_api_transports', array( 'curl', 'streams' ), array(), $this->api );
                 $http                = new WP_Http;
                 $vars                = array(
@@ -858,9 +896,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
          */
         public function tm_aj_set_custom_post_types( $data_args ) {
             try {
-                if ( isset( $_GET['post_types_list'] ) ) {
-                    $list = sanitize_text_field( $_GET['post_types_list'] );
-                } elseif ( isset( $data_args['post_types_list'] ) ) {
+                if ( isset( $data_args['post_types_list'] ) ) {
                     $list = $data_args['post_types_list'];
                 } else {
                     throw new Exception( 'Invalid API call. Missing argument(s).' );

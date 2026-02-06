@@ -4,7 +4,7 @@ Donate link: http://coschedule.com
 Tags: Content marketing calendar, drag and drop editorial calendar plugin, social media scheduling, editorial calendar plugin, content marketing, social automation tool, pinterest integration, schedule facebook posts, schedule to twitter, social media, tumblr, schedule posts to Linkedin, Google Analytics, social media analytics, Google Docs integration, Evernote integration, Click to Tweet
 Requires at least: 3.5
 Tested up to: 6.8
-Stable tag: 3.3.11
+Stable tag: 3.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,8 +76,17 @@ Please report security bugs found in the source code of the CoSchedule plugin th
 
 == Changelog ==
 
-= 3.3.10 =
+= 3.4.1 =
+* Security patches
+
+= 3.4.0 =
+* Security patches
+
+= 3.3.11 =
 * Updated tested up to WordPress core v6.8
+
+= 3.3.10 =
+* Updated tested up to WordPress core v6.4
 
 = 3.3.9 =
 * Security patches
@@ -371,8 +380,17 @@ Please report security bugs found in the source code of the CoSchedule plugin th
 
 == Upgrade Notice ==
 
-= 3.3.10 =
+= 3.4.1 =
+* Security patches
+
+= 3.4.0 =
+* Security patches
+
+= 3.3.11 =
 * Updated tested up to WordPress core v6.8
+
+= 3.3.10 =
+* Updated tested up to WordPress core v6.4
 
 = 3.3.9 =
 * Security patches
