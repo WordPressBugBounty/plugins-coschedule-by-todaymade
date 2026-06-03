@@ -2,7 +2,7 @@
 /*
 Plugin Name: CoSchedule
 Description: Plan, organize, and execute every content marketing project in one place with CoSchedule, an all-in-one content marketing editorial calendar solution.
-Version: 3.4.1
+Version: 3.4.2
 Author: CoSchedule
 Author URI: http://coschedule.com/
 Plugin URI: http://coschedule.com/
@@ -24,7 +24,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
         private $webhooks_url = "https://webhooks.coschedule.com";
         private $app = "https://app.coschedule.com";
         private $assets = "https://assets.coschedule.com";
-        private $version = "3.4.1";
+        private $version = "3.4.2";
         private $build;
         private $connected = false;
         private $token = false;
@@ -48,7 +48,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
             register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
 
             // Load variables
-            $this->build                  = intval( "103" );
+            $this->build                  = intval( "104" );
             $this->token                  = get_option( 'tm_coschedule_token' );
             $this->calendar_id            = get_option( 'tm_coschedule_calendar_id' );
             $this->wordpress_site_id      = get_option( 'tm_coschedule_wordpress_site_id' );
@@ -591,6 +591,7 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
 
                 // respond //
                 if ( ! is_wp_error( $post_id ) ) {
+                    $this->set_wpml_default_language_for_post( $post_id, $the_post_data['post_type'] );
                     $this->respond_json_and_die( $this->get_full_post( $post_id ) );
                 } else {
                     throw new Exception( 'Unable to insert post: ' . $post_id->get_error_message() );
@@ -711,6 +712,34 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
          */
         public function get_value_or_default( &$var, $default = null ) {
             return isset( $var ) ? $var : $default;
+        }
+
+        /**
+         * When WPML is active, assigns the site's default language to a post so that
+         * posts created or updated through CoSchedule are never orphaned in a non-default
+         * language translation group.
+         *
+         * @param int    $post_id   The ID of the post to configure.
+         * @param string $post_type The post type (e.g. 'post', 'page').
+         */
+        public function set_wpml_default_language_for_post( $post_id, $post_type = 'post' ) {
+            if ( ! $post_id || ! function_exists( 'apply_filters' ) ) {
+                return;
+            }
+
+            // apply_filters returns null when WPML is not active.
+            $default_language = apply_filters( 'wpml_default_language', null );
+            if ( ! $default_language ) {
+                return;
+            }
+
+            do_action( 'wpml_set_element_language_details', array(
+                'element_id'           => $post_id,
+                'element_type'         => 'post_' . $post_type,
+                'trid'                 => false,
+                'language_code'        => $default_language,
+                'source_language_code' => null,
+            ) );
         }
 
         /**
@@ -1044,6 +1073,12 @@ if ( ! class_exists( 'tm_coschedule' ) ) {
                     $out = call_user_func_array( array( $this, $func ), $args );
                 } else {
                     $out = call_user_func_array( $func, $args );
+                }
+
+                // Ensure WPML assigns the default language to posts created or updated via CoSchedule
+                if ( ( 'wp_insert_post' === $func || 'wp_update_post' === $func ) && ! is_wp_error( $out ) && intval( $out ) > 0 ) {
+                    $post_type = isset( $args[0]['post_type'] ) ? $args[0]['post_type'] : get_post_type( intval( $out ) );
+                    $this->set_wpml_default_language_for_post( intval( $out ), $post_type ?: 'post' );
                 }
 
                 // Handle output
